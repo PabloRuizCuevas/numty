@@ -8,6 +8,9 @@ Mathematical functions to operate vectors / arrays in typst:
 #let b = 2
 
 #vmult(a,b)  => (2,4,6)
+#vsum(a,a)  => (2,4,6)
+#vsum(2,a)  => (3,4,5)
+#vdot(a,a)  => 11
 ```
 
 Supported functions
