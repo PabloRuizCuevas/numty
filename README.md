@@ -11,8 +11,13 @@ Mathematical functions to operate arrays:
 Supported functions
 
 vpow -> exponentation
+
 vmult -> multiplication
+
 vdiv -> division
+
 vsum -> sumation
+
 vnorm -> normalization of a vector
+
 vdot -> dot product
