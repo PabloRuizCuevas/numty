@@ -1,12 +1,14 @@
 # numty
 Numeric Typst
 
-Mathematical functions to operate arrays:
+Mathematical functions to operate vectors / arrays in typst:
 
+```typ
 #let a = (1,2,3)
 #let b = 2
 
 #vmult(a,b)  => (2,4,6)
+```
 
 Supported functions
 
