@@ -1,0 +1,2 @@
+# numty
+Numeric Typst
