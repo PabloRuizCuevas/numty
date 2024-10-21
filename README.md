@@ -1,7 +1,7 @@
 # numty
 Numeric Typst
 
-Mathematical functions to operate vectors / arrays in typst:
+Mathematical functions to operate vectors / arrays and numbers in typst, with simple broadcasting. 
 
 ```typ
 #let a = (1,2,3)
