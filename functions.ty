@@ -1,11 +1,13 @@
 
-// vectorial functions:
+// boolean helpers
 
 #let arrarr(a,b) = (type(a) == array and type(b) == array)
 #let arrflt(a,b) = (type(a) == array and type(b) != array)
 #let fltarr(a,b) = (type(a) != array and type(b) == array)
 
-#let vpow(a, power) = {
+// // basic functions // //
+
+#let pow(a, power) = {
   if arrarr(a,power) {
     a.zip(power).map(((a,b)) => a/b)
   } 
@@ -14,7 +16,7 @@
   }
 }
 
-#let vmult(a,b) = {
+#let mult(a,b) = {
   if arrarr(a,b) {
     a.zip(b).map(((a,b)) => a*b)
   } 
@@ -23,7 +25,7 @@
   }
 }
 
-#let vdiv(a,b) = {
+#let div(a,b) = {
   if arrarr(a,b) {
     a.zip(b).map(((a,b)) => a/b)
   } 
@@ -31,11 +33,11 @@
     a.map(a => a/b)
   } 
   else {
-    vdiv(b, a)
+    div(b, a)
   }
 }
   
-#let vsum(a, b) = {
+#let add(a, b) = {
   if arrarr(a,b) {
     a.zip(b).map(((a,b)) => a+b)
   }
@@ -43,13 +45,51 @@
     a.map(a => a+b)
   }
   else {
-    vsum(b, a)
+    add(b, a)
   }
 }
 
-#let vnorm(a) = { 
+#let sub(a, b) = {
+  if arrarr(a,b) {
+    a.zip(b).map(((a,b)) => a-b)
+  }
+  else if (type(a) == array) {
+    a.map(a => a-b)
+  }
+  else {
+    sub(b, a)
+  }
+}
+
+// // vectorial functions // //
+
+#let norm(a) = { 
+  // normalize a vector
   let aux = a.sum()
   a.map(b => b/aux)
 } 
 
-#let vdot(a,b) = vmult(a,b).sum()
+// dot product
+#let dot(a,b) = mult(a,b).sum()
+
+
+// // trigonometry // //
+
+#let sin(a) = {
+  if (type(a) == array) {
+    a.map(a => calc.sin(a))
+  }
+  else {
+    calc.sin(a)
+  }
+}
+
+#let cos(a) = {
+  if (type(a) == array) {
+    a.map(a => calc.cos(a))
+  }
+  else {
+    calc.cos(a)
+  }
+}
+
