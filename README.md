@@ -1,4 +1,4 @@
-# numty
+# Numty
 Numeric Typst
 
 Mathematical functions to operate vectors / arrays and numbers in typst, with simple broadcasting and Nan handling.
