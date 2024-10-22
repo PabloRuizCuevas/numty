@@ -16,6 +16,9 @@ Mathematical functions to operate vectors / arrays and numbers in typst, with si
 
 #calc.sin((3,4)) -> fails
 #nt.sin((3.4)) -> (0.14411, 0.90929)
+
+#let x = nt.linspace(0,10,3) => (0,5,10)
+#let y = nt.sin(x) => (0, -0.95, -0.54)
 ```
 
 Supported Features:
@@ -53,3 +56,11 @@ Array operations:
 #nt.dot((1,2),(2,4)) => 9
 #nt.normalize((1,4), l:1) => (1/5,4/5)
 ```
+
+Others:
+```typ
+#nt.lisnspace(0,10,3) => (0,5,10)
+nt.logspace(1,3,3)
+nt.geomspace(1,3,3) 
+```
+
