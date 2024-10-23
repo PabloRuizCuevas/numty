@@ -1,28 +1,44 @@
-# Numty
-Numeric Typst
+## Numty
 
-Mathematical functions to operate Matrices, vectors/arrays and numbers in typst, with simple broadcasting and Nan handling.
+### Numeric Typst
 
-Broadcasting rules are inspired by the numpy ones, as well as the overall API.
+A library for performing mathematical operations on matrices, vectors/arrays, and numbers in Typst, with support for broadcasting and handling NaN values. Numty’s broadcasting rules and API are inspired by NumPy.
 
 ```typ
 #import "numty.typ" as nt
 
-#let a = (1,2,3)
+// Define vectors and matrices
+#let a = (1, 2, 3)
 #let b = 2
-#let m = ((1,2),(1,3))
+#let m = ((1, 2), (1, 3))
 
-#nt.mult(a,b) // (2,4,6)
-#nt.add(a,a)  // (2,4,6)
-#nt.add(2,a)  // (3,4,5)
-#nt.add(m,1)  // ((2,3),(2,4))
-#nt.dot(a,a)  // 11
+// Element-wise operations with broadcasting
+#nt.mult(a, b)  // Multiply vector 'a' by scalar 'b': (2, 4, 6)
+#nt.add(a, a)   // Add two vectors: (2, 4, 6)
+#nt.add(2, a)   // Add scalar '2' to each element of vector 'a': (3, 4, 5)
+#nt.add(m, 1)   // Add scalar '1' to each element of matrix 'm': ((2, 3), (2, 4))
 
-#calc.sin((3,4)) // fails
-#nt.sin((3.4))  // (0.14411, 0.90929)
+// Dot product of vectors
+#nt.dot(a, a)   // Dot product of vector 'a' with itself: 11
 
-#let x = nt.linspace(0,10,3)  // (0,5,10)
-#let y = nt.sin(x) // (0, -0.95, -0.54)
+// Handling NaN cases in mathematical functions
+#calc.sin((3, 4)) // Fails, as Typst does not support vector operations directly
+#nt.sin((3.4))    // Sine of each element in vector: (0.14411, 0.90929)
+
+// Generate equally spaced values and apply functions
+#let x = nt.linspace(0, 10, 3)  // Generate 3 equally spaced values between 0 and 10: (0, 5, 10)
+#let y = nt.sin(x)              // Apply sine function to each element: (0, -0.95, -0.54)
+
+// Logical operations
+#nt.eq(a, b)      // Compare each element in 'a' to 'b': (false, true, false)
+#nt.any(nt.eq(a, b)) // Check if any element in 'a' equals 'b': true
+#nt.all(nt.eq(a, b)) // Check if all elements in 'a' equal 'b': false
+
+// Handling special cases like division by zero
+#nt.div((1, 3), (2, 0))  // Element-wise division, with NaN for division by zero: (0.5, float.nan)
+
+// Matrix operations (element-wise)
+#nt.add(m, 1)  // Add scalar to matrix elements: ((2, 3), (2, 4))
 ```
 
 ## Supported Features:
