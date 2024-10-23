@@ -19,7 +19,7 @@ A library for performing mathematical operations on matrices, vectors/arrays, an
 #nt.add(m, 1)   // Add scalar '1' to each element of matrix 'm': ((2, 3), (2, 4))
 
 // Dot product of vectors
-#nt.dot(a, a)   // Dot product of vector 'a' with itself: 11
+#nt.dot(a, a)   // Dot product of vector 'a' with itself: 14
 
 // Handling NaN cases in mathematical functions
 #calc.sin((3, 4)) // Fails, as Typst does not support vector operations directly
