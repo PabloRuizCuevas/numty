@@ -25,7 +25,7 @@ A library for performing mathematical operations on n-dimensional matrices, vect
 #calc.sin((3, 4)) // Fails, as Typst does not support vector operations directly
 #nt.sin((3.4))    // Sine of each element in vector: (0.14411, 0.90929)
 
-// Generate equally spaced values and apply functions
+// Generate equally spaced values and vectorized functions
 #let x = nt.linspace(0, 10, 3)  // Generate 3 equally spaced values between 0 and 10: (0, 5, 10)
 #let y = nt.sin(x)              // Apply sine function to each element: (0, -0.95, -0.54)
 
@@ -39,6 +39,11 @@ A library for performing mathematical operations on n-dimensional matrices, vect
 
 // Matrix operations (element-wise)
 #nt.add(m, 1)  // Add scalar to matrix elements: ((2, 3), (2, 4))
+
+// matrix
+#nt.transpose(m)  // transposition
+#nt.matmul(m,m) //  matrix multipliation
+
 ```
 
 Since vesion 0.0.4 n-dim matrices are supported as well in most operations.
