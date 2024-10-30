@@ -1,8 +1,11 @@
 #import "main.typ" as nt
 
 
+
 #let M = ((1,3), (3,4))
 #let N = ((1,5), (1,4))
+#let n-DimM = (M,N)
+
 #let u = (1,2,3)
 #let v = (3,2,1)
 #let a = 1
@@ -12,7 +15,7 @@
 
 == Test data: 
 
-$ u = #u \ v = #v \ a = #a \ b = #b $
+$ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
 
 === Logic
   === eq(u,v)
@@ -118,7 +121,7 @@ $ u = #u \ v = #v \ a = #a \ b = #b $
      #assert(nt.add(1,(1,3))  == (2,4))
 
     // float float
-    #assert(nt.add(1,2) == 3)
+      #assert(nt.add(1,2) == 3)
 
   === sub(u,v)
     Substracts matrices 
@@ -127,7 +130,7 @@ $ u = #u \ v = #v \ a = #a \ b = #b $
       #assert(nt.sub((1,3),(1,3))  == (0,0))
     // arr flt 
       #assert(nt.sub((1,3),2)  == (-1,1))
-      //#assert(nt.sub(2,(1,3))  == (1,-1))
+    //#assert(nt.sub(2,(1,3))  == (1,-1))
       #nt.sub(2,(1,3))
     // flt flt 
       #assert(nt.sub(2,3)  == -1)
@@ -144,10 +147,16 @@ $ u = #u \ v = #v \ a = #a \ b = #b $
 
   === div(u,v) 
     divide two matrices
+    // ndimmat num
+      #assert(nt.div((((4,2),(4,2)), ((4,2),(4,2))), 2) == (((2,1),(2,1)), ((2,1),(2,1))))
+
+    // num ndimmat 
+      #assert(nt.div(2, (((1,2),(1,2)), ((1,2),(1,2)) )) == (((2,1),(2,1)), ((2,1),(2,1)) ))
+    
     // arr arr 
-     #assert(nt.div((1,3),(1,3))  == (1,1))
-     #assert(nt.div((1,3),(1,0)).at(0)  ==1)
-     #assert(nt.div((1,3),(1,0)).at(1).is-nan())
+      #assert(nt.div((1,3),(1,3))  == (1,1))
+      #assert(nt.div((1,3),(1,0)).at(0)  ==1)
+      #assert(nt.div((1,3),(1,0)).at(1).is-nan())
     // arr flt 
       #assert(nt.div((1,3),2)  == (1/2,3/2))
       #assert(nt.div(2,(1,3))  == (2,2/3))
@@ -158,7 +167,7 @@ $ u = #u \ v = #v \ a = #a \ b = #b $
   === pow(u,v)
     exponentiation of matrices
     // arr arr 
-     #assert(nt.pow((1,3),(1,3))  == (1,27))
+      #assert(nt.pow((1,3),(1,3))  == (1,27))
     // arr flt 
       #assert(nt.pow((1,3),2)  == (1,9))
       #assert(nt.pow(2,(1,3))  == (2,8))
@@ -169,15 +178,32 @@ $ u = #u \ v = #v \ a = #a \ b = #b $
   // arr 
     #assert(nt.log((1,10, 100)) == (0,1,2))
     //#assert(nt.log((0,10, 100)) == (float.nan,1,2))
+    #nt.sin(n-DimM)
 
+  // others:
+    #assert(nt.linspace(0,10,3) == (0,5,10))
+    #assert(nt.geomspace(1,100,3) == (1,10,100))
+    #assert(nt.logspace(1,3,3) == (10,100,1000))
 
-// others:
-  #assert(nt.linspace(0,10,3) == (0,5,10))
-  #assert(nt.geomspace(1,100,3) == (1,10,100))
-  #assert(nt.logspace(1,3,3) == (10,100,1000))
+== Matrix
+  // matrix
+  === transpose
+  #N
+  
+  #assert(nt.transpose(N) == ((1,1),(5,4)))
 
+  === matmul
+  
+  #N
+  
+  #M
+  
+  #assert(nt.matmul(N,M) == ((16,23),(13,19)))
 
 == Print
 
+#nt.print(N) 
 #nt.print(M)
+#nt.print(nt.matmul(N,M))
+
 #nt.print(u)
