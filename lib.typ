@@ -128,6 +128,20 @@
 #let tan(a) = apply(a,calc.tan)
 #let log(a) = apply(a, j => if (j>0) {calc.log(j)} else {float.nan} )
 
+// matrix
+
+#let transpose(m) = {
+    // Get dimensions of the matrix
+    let rows = m.len()
+    let cols = m.at(0).len()
+    range(0, cols).map(c => range(0, rows).map(r => m.at(r).at(c)))
+  }
+
+#let matmul(a,b) = {
+  let bt = transpose(b)
+  a.map(a_row => bt.map(b_col => dot(a_row,b_col)))
+}
+
 // others:
 
 #let linspace = (start, stop, num) => {
