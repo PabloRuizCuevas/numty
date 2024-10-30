@@ -2,7 +2,7 @@
 
 ### Numeric Typst
 
-A library for performing mathematical operations on matrices, vectors/arrays, and numbers in Typst, with support for broadcasting and handling NaN values. Numty’s broadcasting rules and API are inspired by NumPy.
+A library for performing mathematical operations on n-dimensional matrices, vectors/arrays, and numbers in Typst, with support for broadcasting and handling NaN values. Numty’s broadcasting rules and API are inspired by NumPy.
 
 ```typ
 #import "numty.typ" as nt
@@ -40,6 +40,8 @@ A library for performing mathematical operations on matrices, vectors/arrays, an
 // Matrix operations (element-wise)
 #nt.add(m, 1)  // Add scalar to matrix elements: ((2, 3), (2, 4))
 ```
+
+Since vesion 0.0.4 n-dim matrices are supported as well in most operations.
 
 ## Supported Features:
 
