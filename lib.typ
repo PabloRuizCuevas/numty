@@ -30,33 +30,41 @@
   }
 }
 
+#let op(a,b, fun) ={
+  // generic operator with broacasting
+  if matmat(a,b) {
+    a.zip(b).map(((a,b)) => op(a,b, fun))
+  }
+  else if matflt(a,b){ // supports n-dim matrices
+    a.map(v=> op(v,b, fun))
+  }
+  else if fltmat(a,b){
+    b.map(v=> op(a,v, fun))
+  }
+  else if arrarr(a,b) {
+    a.zip(b).map(((i,j)) => fun(i,j))
+  }
+  else if arrflt(a,b) {
+    a.map(a => fun(a,b))
+  }
+  else if fltarr(a,b) {
+    b.map(i => fun(a,i))
+  }
+  else {
+    fun(a,b)
+  }
+}
+
 #let _eq(i,j, equal-nan) ={
   i==j or (all(isna((i,j))) and equal-nan)
 }
 
 #let eq(u,v, equal-nan: false) = {
   // Checks for equality element wise
-  // still to implement mat flt comparisons
   // eq((1,2,3), (1,2,3)) = (true, true, true)
   // eq((1,2,3), 1) = (true, false, false)
-  if matmat(u,v) {
-    u.zip(v).map(((m,n)) => eq(m,n, equal-nan:equal-nan))
-  }
-  else if arrarr(u,v) {
-    u.zip(v).map(((i,j)) => (_eq(i,j, equal-nan)))
-  } 
-  else if arrflt(u,v) {
-    u.map(i => _eq(i,v,equal-nan))
-  }
-  else if fltarr(u,v) {
-    v.map(i => _eq(i,u,equal-nan))
-  }
-  else if fltflt(u,v) {
-     _eq(u,v, equal-nan)
-  }
-  else{
-    panic("Not supported broadcasting data types", type(u), type(v))
-  }
+  let _eqf(i,j)={_eq(i,j, equal-nan)}
+  op(u,v, _eqf)
 }
 
 
@@ -72,14 +80,11 @@
 
 #let all-eq(u,v) = all(eq(u,v))
 
-#let apply(a,fun) ={
+#let apply(a, fun) ={
   // vectorize
   // consider returnding a function of a instead?
-  if is-mat(a){
-    a.map(v=>v.map(i=>fun(i)))
-  }
-  else if is-arr(a){
-    a.map(v=>fun(v))
+  if is-arr(a){ //recursion exploted for n-dim
+    a.map(v=>apply(v, fun))
   }
   else{
     fun(a)
@@ -95,30 +100,7 @@
 #let _mul(a,b)=(a * b)
 #let _div(a,b)= if (b!=0) {a/b} else {float.nan}
 
-#let op(a,b, fun) ={
-  // generic operator with broacasting
-  if matmat(a,b) {
-    a.zip(b).map(((a,b)) => op(a,b, fun))
-  }
-  else if matflt(a,b){
-    a.map(v=> v.map(a => fun(a,b)))
-  }
-  else if fltmat(a,b){
-    b.map(v=> v.map(a => fun(a,b)))
-  }
-  else if arrarr(a,b) {
-    a.zip(b).map(((i,j)) => fun(i,j))
-  }
-  else if arrflt(a,b) {
-    a.map(a => fun(a,b))
-  }
-  else if fltarr(a,b) {
-    b.map(i => fun(a,i))
-  }
-  else {
-    fun(a,b)
-  }
-}
+
 
 #let add(u,v) = op(u,v, _add)
 #let sub(u, v) = op(u,v, _sub)
@@ -192,6 +174,8 @@
   }
 }
 
+
+
 #let p(M) = {
   let scope = (value1: "true", value2: "false")
   if is-mat(M) {
@@ -204,4 +188,3 @@
     eval("$"+str(M)+"$")
   }
 }
-
