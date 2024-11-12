@@ -1,5 +1,5 @@
 #import "main.typ" as nt
-
+#import "main.typ": r,c
 
 
 #let M = ((1,3), (3,4))
@@ -11,21 +11,58 @@
 #let a = 1
 #let b = 2
 
+#let testf(name, f, ..args, assertion: none) = {
+    // unfortunatelly f is not aware of his own name, 
+    // and eval scope is out of nt, not sure how to include it
+    assert(f(..args) == assertion)
+    [#name ( #nt.p(..args, "= ", assertion) ]
+}
+
 = Automatic Tests
 
 == Test data: 
 
 $ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
 
+
+== Print
+
+  For now print default to col vectors, that may change, as it is still an experimental API, but be mindful that 1d is considered col by default use nt.c and nt.r to convert them.
+
+  Small print
+
+  #let u = (1,2,3)
+  #let v = (3,2,1)
+  
+  // matrix 
+  #nt.p("N M = ",N, M , nt.matmul(N,M)) 
+
+  #nt.p((N,M,M).reduce(nt.matmul))
+  
+
+  #let S = ((1,2, 4), (3,4, 5) )
+  #let K = ((1,2), (3,4), (4,2) )
+  
+  #nt.p("S K = ", S, K , nt.matmul(S, K) )
+  #nt.p("K S = ", K, S , nt.matmul(K, S) )
+  
+  // matrix
+  #nt.p("u_c v_r = ",  c(..v), r(..u), " = ", nt.matmul(c(..v), r(..u))) 
+  
+  Big print:
+  
+  #nt.print("N M = ", N, M , nt.matmul(N,M)) 
+
 === Logic
   === eq(u,v)
     Checks element wise equality:
     
     // mat mat
-    nt.eq(#nt.p(M),#nt.p(N)) = #nt.p(nt.eq(M,N))
+    eq(#nt.p(M,N, " = ", nt.eq(M,N))
     
     // arr arr 
-    nt.eq(#u,#v)  -> #nt.eq(u,v)
+    eq#nt.p(u,v)  #nt.eq(u,v) //
+    
     #assert(nt.eq(u,v) == (false, true, false))
     #assert(nt.eq(u,u) == (true, true, true))
   
@@ -45,7 +82,7 @@ $ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
     Check if array only contains true or 1 
     
     //mat
-    #nt.all(((true, true),(true,true)))
+    all#nt.p(((true, true),(true,true))) = #nt.all(((true, true),(true,true)))
     
     // arr
     #assert(nt.all((false, true, false)) == false)
@@ -88,29 +125,53 @@ $ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
   === abs(a)
     Takes the abs of the mat, array, value
     #assert(nt.abs(((1,-1),(1,-4))) == ((1,1),(1,4)))
-    
+
 == Types
   //arrarr(a,b)
   === arrarr(u,v)
     Check if a,b are arrays
-  #assert(nt.arrarr(u,v) == true)
-  #assert(nt.arrarr(a,b) == false)
+    
+    #assert(nt.arrarr(u,v) == true)
+    #assert(nt.arrarr(a,b) == false)
 
   === arrflt(u,a)
+  
     check if u is array and a is float
-  #assert(nt.arrflt(u,b) == true) 
-  #assert(nt.arrflt(b,u) == false) 
-  #assert(nt.fltarr(b,u) == true) 
-  #assert(nt.fltarr(b,b) == false) 
-  #assert(nt.fltflt(b,b) == true) 
+    #assert(nt.arrflt(u,b) == true) 
+    #assert(nt.arrflt(b,u) == false) 
+    #assert(nt.fltarr(b,u) == true) 
+    #assert(nt.fltarr(b,b) == false) 
+    #assert(nt.fltflt(b,b) == true) 
+
+  === is-1d
+    Checks if u is normal array or 1d mat 
+
+    #assert(nt.is-1d( (1,2)  ) == true) 
+    #assert(nt.is-1d( r(1,2) ) == true) 
+    #assert(nt.is-1d( c(1,2) ) == true) 
+    #assert(nt.is-1d( ((1,2), (2,3)) )  == false) 
+
+  === is-1d-arr
+    Check if is a typst 1d array, no nested 
+
+    #assert(nt.is-1d-arr( (1,2)  ) == true) 
+    #assert(nt.is-1d-arr( r(1,2) ) == false) 
+    #assert(nt.is-1d-arr( c(1,2) ) == false) 
+    #assert(nt.is-1d-arr( ((1,2), (2,3)) )  == false) 
+
 
 == Operators
   === add(u,v)
-    Adds matrices vectors numbers
+    Adds matrices vectors numbers:
     
+    #let A = ((1,3),(1,3))
+    #let B = ((1,3),(1,5))
     // mat mat
-     #nt.add( ((1,3),(1,3)), ((1,1),(1,1)) )
-
+     #nt.p(A,B) = #nt.p(nt.add(A, B))
+    
+     #testf("add", nt.add, A,B, assertion: nt.add(A, B))
+     
+     #testf("add", nt.add, u,v, assertion: (4,4,4))
     // mat flt
      #assert(nt.add( ((1,3),(1,3)), 2 ) == ((3,5),(3,5)))
     // arr arr 
@@ -121,7 +182,7 @@ $ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
      #assert(nt.add(1,(1,3))  == (2,4))
 
     // float float
-      #assert(nt.add(1,2) == 3)
+     #assert(nt.add(1,2) == 3)
 
   === sub(u,v)
     Substracts matrices 
@@ -188,22 +249,56 @@ $ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
 == Matrix
   // matrix
   === transpose
-  #N
+  
+  #nt.p(N)
   
   #assert(nt.transpose(N) == ((1,1),(5,4)))
 
   === matmul
+
+  Tests: 
   
-  #N
+  #nt.p(N)  #nt.p(M) =   #nt.p(nt.matmul(N,M))
+  #assert(nt.matmul(N,M) == ((16,23),(13,19)))
+
+  #nt.p( (1,3), )) #nt.p( ((16,23),(13,19)) ) 
+  #nt.p( nt.matmul( ((1,3)),  ((16,23),(13,19)) ))
+  
+  #nt.matmul(((16,23),(13,19)), ((1,), (2,)))
+  //#nt.transpose(((1,3)))
+  #( (1,), (2, ))
+  
+  #((1,2,),)
+
+  #nt.r(1,2)
+  #nt.c(1,2)
+
+  transpose:
+  #nt.r(1,2)
+  
+  #nt.p(r(1,2))
+  //#nt.p(r(1,2))
+
+  #nt.p( ((1,2),(3,4)) ) #nt.p(c(1,2) ) 
+  #nt.p(nt.matmul( ((1,2),(3,4)), c(1,2) ))
+
+  #nt.p(r(1,2)) 
+  #nt.p(nt.matmul(c(1,2), ((1,2),(3,4)) ))
+  
+  #nt.transpose(c(1,2))
+
+  == det
+
+  Only 2x2 for now
   
   #M
   
-  #assert(nt.matmul(N,M) == ((16,23),(13,19)))
+  #nt.det(M)
 
-== Print
+  == trace
+  
+  #nt.trace(M)
+  
+  
 
-#nt.print(N) 
-#nt.print(M)
-#nt.print(nt.matmul(N,M))
-
-#nt.print(u)
+#pagebreak()

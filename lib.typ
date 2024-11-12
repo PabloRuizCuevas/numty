@@ -9,6 +9,40 @@
 #let matmat(m,n) = is-mat(m) and is-mat(n)
 #let matflt(m,n) = is-mat(m) and type(n) != array
 #let fltmat(m,n) = is-mat(n) and type(m) != array
+#let is-str(s) = (type(a) == str)
+
+#let is-1d-arr(arr) ={
+  if is-arr(arr){if is-arr(arr.at(0)) {false} else {true}} else {false}
+}
+
+#let is-1d(arr) ={
+  if is-arr(arr){ // arrays anda mats
+    if is-arr(arr.at(0)) and arr.at(0).len() > 1 { 
+      if arr.len() == 1 {true} else {false}  // row mat else full mat
+    } 
+    else {true} // col mat
+  } 
+  else {false} // no array
+}
+
+// == reshapers ==
+
+#let r(..v) = {
+  (v.pos(),)
+}
+
+#let c(..v) = {
+  v.pos().map(r => (r,),) 
+}
+
+#let transpose(m) = {
+    // Get dimensions of the matrix
+    let rows = m.len()
+    let cols = m.at(0).len()
+    range(0, cols).map(c => range(0, rows).map(r => m.at(r).at(c)))
+  }
+
+#let t(m) = transpose(m) 
 
 // == boolean ==
 
@@ -80,7 +114,7 @@
 
 #let all-eq(u,v) = all(eq(u,v))
 
-#let apply(a, fun) ={
+#let apply(a, fun) = {
   // vectorize
   // consider returnding a function of a instead?
   if is-arr(a){ //recursion exploted for n-dim
@@ -99,7 +133,6 @@
 #let _sub(a,b)=(a - b)
 #let _mul(a,b)=(a * b)
 #let _div(a,b)= if (b!=0) {a/b} else {float.nan}
-
 
 
 #let add(u,v) = op(u,v, _add)
@@ -130,16 +163,21 @@
 
 // matrix
 
-#let transpose(m) = {
-    // Get dimensions of the matrix
-    let rows = m.len()
-    let cols = m.at(0).len()
-    range(0, cols).map(c => range(0, rows).map(r => m.at(r).at(c)))
-  }
-
 #let matmul(a,b) = {
   let bt = transpose(b)
   a.map(a_row => bt.map(b_col => dot(a_row,b_col)))
+}
+
+#let det(m) = {
+  // only 2 by 2 for now 
+  if m.len() == 2 and m.at(0).len() == 2{
+    m.at(0).at(0) * m.at(1).at(1) - m.at(1).at(0) * m.at(0).at(1)
+  }
+  //assert("Not implemented")
+}
+
+#let trace(m) ={
+  m.enumerate().map( ((i,_ )) => m.at(i).at(i)).sum()
 }
 
 // others:
@@ -176,29 +214,30 @@
   }
 }
 
-#let print(M) = {
-  if is-mat(M) {
-   eval("$ mat(" + M.map(v => v.map(j=>to-str(j)).join(",")).join(";")+ ") $")
+
+#let _p(m) = {
+  if is-mat(m) {
+   "mat(" + m.map(v => v.map(j=>to-str(j)).join(",")).join(";")+ ")"
   }
-  else if is-arr(M){
-    eval("$ vec(" + M.map(v => str(v)).join(",")+ ") $")
+  else if is-arr(m){
+    "vec(" + m.map(v => str(v)).join(",")+ ")"
+  }
+  else if is-arr(m){
+    is-str(m)
   }
   else{
-    eval(" $"+str(M)+"$ ")
+   str(m)
   }
 }
 
-
-
-#let p(M) = {
+#let print(..m) = {
   let scope = (value1: "true", value2: "false")
-  if is-mat(M) {
-   eval("$mat(" + M.map(v => v.map(j=>to-str(j)).join(",")).join(";")+ ")$", scope: scope)
-  }
-  else if is-arr(M){
-    eval("$vec(" + M.map(v => str(v)).join(",")+ ")$")
-  }
-  else{
-    eval("$"+str(M)+"$")
-  }
+  eval("$ " + m.pos().map(r => _p(r)).join(" ") + " $", scope: scope)
 }
+
+#let p(..m) = {
+  let scope = (value1: "true", value2: "false")
+  eval("$" + m.pos().map(r => _p(r)).join(" ") + "$", scope: scope)
+}
+
+

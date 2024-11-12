@@ -43,17 +43,40 @@ A library for performing mathematical operations on n-dimensional matrices, vect
 // matrix
 #nt.transpose(m)  // transposition
 #nt.matmul(m,m) //  matrix multipliation
-
+#nt.matmul(c(1,2), r(2,3)) //  colum vector times row vector multiplication.
+#np.trace(m) // trace
+#np.det(m) /2x2 determinant
+ 
+// printing
+#nt.print(m, " != " , (1,2))  // long dollar print, see in pdf 
+#nt.p(m, " != " , (1,2))  //  short long print print, see in pdf 
 ```
 
 Since vesion 0.0.4 n-dim matrices are supported as well in most operations.
 
 ## Supported Features:
 
-### Logic Operations:
+### Dimensions:
+Numty uses standard typst list as a base type, most 1d operations like dot are suported directly for them.
+
+For matrix specific operations we use 2d arrays / nested arrays, that are also the standard typst list, but nested like in: ((1,2), (1,1)). 
+
+For convenience you can create column or row vectors with the #nt.c and #nt.r functions.
+
 ```typ
 #import "numty.typ" as nt
+#import "numty.typ": c, r
 
+#let a = (1,2,3)
+#let b = (3,2,1)
+#c(..a) // ((1,),(2,),(3,)) 
+#r(..b) // ((3,2,1),)
+#nt.matmul(c(..a), r(..b)) // column @ row
+
+```
+
+### Logic Operations:
+```typ
 #let a = (1,2,3)
 #let b = 2
 
@@ -91,7 +114,7 @@ Basic vector operations
 
 ### Others:
 
-Functions for creating equally spaced indexes in linear and logspace, usefull for log plots
+Functions for creating equally spaced indexes in linear and logspace, usefull for log plots, to sample in acordance to the logarithmic space.
 
 ```typ
 #nt.linspace(0,10,3) // (0,5,10)
@@ -99,8 +122,20 @@ Functions for creating equally spaced indexes in linear and logspace, usefull fo
 #nt.geomspace(1,3,3) 
 ```
 
+### Matrix
+
+```typ
+#nt.matmul(m,m )              // matrix multiplication
+#nt.det(((1,3), (3,4)))       // only 2x2 supported for now
+#nt.trace(((1,3), (3,4)))     // trace of square matrix
+#nt.transpose(((1,3), (3,4))) // matrix transposition
+```
+
 ### Printing
+
+Numty supports $ printing to the pdf of numerical matrices, both long and short format. 
 
 ```typ
 #nt.print((1,2),(4,2)))  // to display in the pdf
+#nt.p((1,2),(4,2)), " random string ")     // to display in the pdf
 ```
