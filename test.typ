@@ -1,5 +1,5 @@
-#import "main.typ" as nt
-#import "main.typ": r,c
+#import "lib.typ" as nt
+#import "lib.typ": r,c
 
 
 #let M = ((1,3), (3,4))
@@ -289,16 +289,30 @@ $ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
 
   == det
 
-  Only 2x2 for now
-  
-  #M
-  
-  #nt.det(M)
+  #let M3 = ((1,2,3),(0,1,4),(5,6,0))
+  #let M4 = ((1,0,0,0),(0,2,0,0),(0,0,3,0),(0,0,0,4))
+  #let M5 = ((1,1,1,1,1),(0,1,1,1,1),(0,0,1,1,1),(0,0,0,1,1),(0,0,0,0,1))
+
+  === 2x2
+
+  #nt.p("det", M) = #nt.det(M)
+  #assert(nt.det(M) == -5)
+
+  === 3x3
+  #nt.p("det", M3) = #nt.det(M3)
+  #assert(nt.det(M3) == 1)
+
+  === 4x4
+  #nt.p("det", M4) = #nt.det(M4)
+  #assert(nt.det(M4) == 24)
+
+  === 5x5
+  #nt.p("det", M5) = #nt.det(M5)
+  #assert(nt.det(M5) == 1)
 
   == trace
   
   #nt.trace(M)
-  
   
 
 #pagebreak()
