@@ -168,8 +168,8 @@
   a.map(a_row => bt.map(b_col => dot(a_row,b_col)))
 }
 
-#let det(mat) = {
-  let n = mat.len()
+#let det(m) = {
+  let n = m.len()
   if n == 0 {
     panic("cannot take determinant of empty matrix!")
   }
@@ -183,13 +183,13 @@
   let sign = 1
 
   for k in range(n - 1) {
-    if mat.at(k).at(k) == 0 {
+    if m.at(k).at(k) == 0 {
       let swapped = false
       for i in range(k + 1, n) {
-        if mat.at(i, k) != 0 {
-          let tmp = mat.row(k)
-          mat.set_row(k, mat.row(i))
-          mat.set_row(i, tmp)
+        if m.at(i, k) != 0 {
+          let tmp = m.row(k)
+          m.set_row(k, m.row(i))
+          m.set_row(i, tmp)
           sign = -sign
           swapped = true
           break
@@ -200,19 +200,19 @@
       }
     }
 
-    let pivot = mat.at(k).at(k)
-    let prev = if k > 0 { mat.at(k - 1).at(k - 1) } else { 1 }
+    let pivot = m.at(k).at(k)
+    let prev = if k > 0 { m.at(k - 1).at(k - 1) } else { 1 }
 
     for i in range(k + 1, n) {
       for j in range(k + 1, n) {
-        let num = mat.at(i).at(j) * pivot - mat.at(i).at(k) * mat.at(k).at(j)
-        mat.at(i).at(j) = num / prev
+        let num = m.at(i).at(j) * pivot - m.at(i).at(k) * m.at(k).at(j)
+        m.at(i).at(j) = num / prev
       }
-      mat.at(i).at(k) = 0
+      m.at(i).at(k) = 0
     }
   }
 
-  sign * mat.at(n - 1).at(n - 1)
+  sign * m.at(n - 1).at(n - 1)
 }
 
 #let trace(m) ={
