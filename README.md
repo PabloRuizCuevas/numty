@@ -45,18 +45,17 @@ A library for performing mathematical operations on n-dimensional matrices, vect
 #nt.matmul(m,m) //  matrix multipliation
 #nt.matmul(c(1,2), r(2,3)) //  colum vector times row vector multiplication.
 #np.trace(m) // trace
-#np.det(m) /2x2 determinant
+#np.det(m) // nxn determinant 
  
 // printing
 #nt.print(m, " != " , (1,2))  // long dollar print, see in pdf 
 #nt.p(m, " != " , (1,2))  //  short long print print, see in pdf 
 ```
 
-Since vesion 0.0.4 n-dim matrices are supported as well in most operations.
-
 ## Supported Features:
 
 ### Dimensions:
+
 Numty uses standard typst list as a base type, most 1d operations like dot are suported directly for them.
 
 For matrix specific operations we use 2d arrays / nested arrays, that are also the standard typst list, but nested like in: ((1,2), (1,1)). 
@@ -87,8 +86,7 @@ For convenience you can create column or row vectors with the #nt.c and #nt.r fu
 
 ### Math operators:
 
-All operators are element-wise, 
-traditional matrix multiplication is not yet supported.
+All operators are element-wise,
 
 ```typ
 #nt.add((0,1,3), 1)  // (1,2,4)
@@ -125,8 +123,8 @@ Functions for creating equally spaced indexes in linear and logspace, usefull fo
 ### Matrix
 
 ```typ
-#nt.matmul(m,m )              // matrix multiplication
-#nt.det(((1,3), (3,4)))       // only 2x2 supported for now
+#nt.matmul(m,m)              // matrix multiplication
+#nt.det(((1,3), (3,4)))       // nxn matrix determinant
 #nt.trace(((1,3), (3,4)))     // trace of square matrix
 #nt.transpose(((1,3), (3,4))) // matrix transposition
 ```
