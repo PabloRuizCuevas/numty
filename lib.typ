@@ -168,24 +168,28 @@
   a.map(a_row => bt.map(b_col => dot(a_row,b_col)))
 }
 
-/// Using https://en.wikipedia.org/wiki/Bareiss_algorithm
 #let det(mat) = {
   let n = mat.len()
-  let A = mat
-  let sign = 1
-
   if n == 0 {
-    return 1
+    panic("cannot take determinant of empty matrix!")
   }
 
-  for k in range(0, n - 1) {
-    if A.at(k).at(k) == 0 {
+  if m.len() == 2 and m.at(0).len() == 2 {
+    return m.at(0).at(0) * m.at(1).at(1) - m.at(1).at(0) * m.at(0).at(1)
+  }
+
+  /// using https://en.wikipedia.org/wiki/Bareiss_algorithm
+
+  let sign = 1
+
+  for k in range(n - 1) {
+    if mat.at(k).at(k) == 0 {
       let swapped = false
       for i in range(k + 1, n) {
-        if A.at(i, k) != 0 {
-          let tmp = A.row(k)
-          A.set_row(k, A.row(i))
-          A.set_row(i, tmp)
+        if mat.at(i, k) != 0 {
+          let tmp = mat.row(k)
+          mat.set_row(k, mat.row(i))
+          mat.set_row(i, tmp)
           sign = -sign
           swapped = true
           break
@@ -196,19 +200,19 @@
       }
     }
 
-    let pivot = A.at(k).at(k)
-    let prev = if k > 0 { A.at(k - 1).at(k - 1) } else { 1 }
+    let pivot = mat.at(k).at(k)
+    let prev = if k > 0 { mat.at(k - 1).at(k - 1) } else { 1 }
 
     for i in range(k + 1, n) {
       for j in range(k + 1, n) {
-        let num = A.at(i).at(j) * pivot - A.at(i).at(k) * A.at(k).at(j)
-        A.at(i).at(j) = num / prev
+        let num = mat.at(i).at(j) * pivot - mat.at(i).at(k) * mat.at(k).at(j)
+        mat.at(i).at(j) = num / prev
       }
-      A.at(i).at(k) = 0
+      mat.at(i).at(k) = 0
     }
   }
 
-  sign * A.at(n - 1).at(n - 1)
+  sign * mat.at(n - 1).at(n - 1)
 }
 
 #let trace(m) ={
