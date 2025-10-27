@@ -9,14 +9,21 @@
 #let matmat(m,n) = is-mat(m) and is-mat(n)
 #let matflt(m,n) = is-mat(m) and type(n) != array
 #let fltmat(m,n) = is-mat(n) and type(m) != array
+
+/// Checks if is string
+/// -> float
 #let is-str(s) = (type(a) == str)
 
+/// Checks if is a 1d array
+/// -> float
 #let is-1d-arr(arr) ={
   if is-arr(arr){if is-arr(arr.at(0)) {false} else {true}} else {false}
 }
 
+/// Checks if is a 1d array array or matrix
+/// -> float
 #let is-1d(arr) ={
-  if is-arr(arr){ // arrays anda mats
+  if is-arr(arr){ // arrays or mats
     if is-arr(arr.at(0)) and arr.at(0).len() > 1 { 
       if arr.len() == 1 {true} else {false}  // row mat else full mat
     } 
@@ -27,14 +34,17 @@
 
 // == reshapers ==
 
+/// Creates row vector
 #let r(..v) = {
   (v.pos(),)
 }
 
+/// Creates column vector
 #let c(..v) = {
   v.pos().map(r => (r,),) 
 }
 
+/// Transposes matrx and vectors
 #let transpose(m) = {
     // Get dimensions of the matrix
     let rows = m.len()
@@ -42,10 +52,12 @@
     range(0, cols).map(c => range(0, rows).map(r => m.at(r).at(c)))
   }
 
+/// Alias of transpose
 #let t(m) = transpose(m) 
 
 // == boolean ==
 
+/// Check if is na
 #let isna(v) = {
   if is-arr(v){
     v.map(i => if (type(i)==float){i.is-nan()} else {false})
@@ -55,6 +67,7 @@
   }
 }
 
+/// Check if all values are true / 1 
 #let all(v) ={
   if is-arr(v){
     v.flatten().all(a => a == true or a ==1)
@@ -64,6 +77,9 @@
   }
 }
 
+/// Generic application of operator to a, b
+/// where a b can be matrices vectors or numbers of any shape
+/// and fun is typically a operator between them
 #let op(a,b, fun) ={
   // generic operator with broacasting
   if matmat(a,b) {
@@ -89,10 +105,12 @@
   }
 }
 
+/// internall equality operator
 #let _eq(i,j, equal-nan) ={
   i==j or (all(isna((i,j))) and equal-nan)
 }
 
+/// Check for equality
 #let eq(u,v, equal-nan: false) = {
   // Checks for equality element wise
   // eq((1,2,3), (1,2,3)) = (true, true, true)
@@ -101,7 +119,7 @@
   op(u,v, _eqf)
 }
 
-
+/// Returns true if any value in a array / matrix is true or 1
 #let any(v) ={
   // check if any item is true after iterating everything
   if is-arr(v){
@@ -114,9 +132,10 @@
 
 #let all-eq(u,v) = all(eq(u,v))
 
+/// Applies  function to an array
 #let apply(a, fun) = {
   // vectorize
-  // consider returnding a function of a instead?
+  // consider returning a function of a instead?
   if is-arr(a){ //recursion exploted for n-dim
     a.map(v=>apply(v, fun))
   }
@@ -125,6 +144,7 @@
   }
 } 
 
+/// Absolute value of a number/array/matrix
 #let abs(a)= apply(a, calc.abs)
 
 // == Operators ==
@@ -134,15 +154,24 @@
 #let _mul(a,b)=(a * b)
 #let _div(a,b)= if (b!=0) {a/b} else {float.nan}
 
-
+/// Addition of a number/array/matrix with broadcasting
 #let add(u,v) = op(u,v, _add)
+
+/// Substraction of a number/array/matrix with broadcasting
 #let sub(u, v) = op(u,v, _sub)
+
+/// Multiplication of a number/array/matrix with broadcasting
 #let mult(u, v) = op(u,v, _mul)
+
+/// Division of a number/array/matrix with broadcasting
 #let div(u, v) = op(u,v, _div)
+
+/// Exponenciation of a number/array/matrix with broadcasting
 #let pow(u, v) = op(u,v, calc.pow)
 
 // == vectorial ==
 
+/// normalization of a vector
 #let normalize(a, l:2) = { 
   // normalize a vector, defaults to L2 normalization
   let aux = pow(pow(abs(a),l).sum(),1/l)
@@ -151,23 +180,32 @@
 
 // dot product
 
+/// Dot product of two vectors
 #let dot(a,b) = mult(a,b).sum()
 
 // == Algebra, trigonometry ==
 
-
+/// Sin function of a number/array/matrix
 #let sin(a) = apply(a,calc.sin)
+
+/// Cos function of a number/array/matrix
 #let cos(a) = apply(a,calc.cos)
+
+/// Tan function of a number/array/matrix
 #let tan(a) = apply(a,calc.tan)
+
+/// Log function of a number/array/matrix
 #let log(a) = apply(a, j => if (j>0) {calc.log(j)} else {float.nan} )
 
 // matrix
 
+/// Matrix multiplication
 #let matmul(a,b) = {
   let bt = transpose(b)
   a.map(a_row => bt.map(b_col => dot(a_row,b_col)))
 }
 
+/// Matrix determinant
 #let det(m) = {
   let n = m.len()
   if n == 0 {
@@ -215,12 +253,14 @@
   sign * m.at(n - 1).at(n - 1)
 }
 
+/// Trace of a matrix
 #let trace(m) ={
   m.enumerate().map( ((i,_ )) => m.at(i).at(i)).sum()
 }
 
 // others:
 
+/// Create a equispaced numbers between a range
 #let linspace = (start, stop, num) => {
   // mimics numpy linspace
   let step = (stop - start) / (num - 1)
@@ -233,6 +273,7 @@
   range(0, num).map(v => calc.pow(base, (start + v * step)))
 }
 
+/// Create a equispaced numbers between a range in a logarithmic scale
 #let geomspace = (start, stop, num) => {
   // mimics numpy geomspace
   let step = calc.pow( stop / start, 1 / (num - 1))
@@ -269,11 +310,13 @@
   }
 }
 
+// print mathematical expresions
 #let print(..m) = {
   let scope = (value1: "true", value2: "false")
   eval("$ " + m.pos().map(r => _p(r)).join(" ") + " $", scope: scope)
 }
 
+// alis of print
 #let p(..m) = {
   let scope = (value1: "true", value2: "false")
   eval("$" + m.pos().map(r => _p(r)).join(" ") + "$", scope: scope)
