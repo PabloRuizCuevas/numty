@@ -11,17 +11,17 @@
 #let fltmat(m,n) = is-mat(n) and type(m) != array
 
 /// Checks if is string
-/// -> float
+/// -> bool
 #let is-str(s) = (type(a) == str)
 
 /// Checks if is a 1d array
-/// -> float
+/// -> bool
 #let is-1d-arr(arr) ={
   if is-arr(arr){if is-arr(arr.at(0)) {false} else {true}} else {false}
 }
 
 /// Checks if is a 1d array array or matrix
-/// -> float
+/// -> bool
 #let is-1d(arr) ={
   if is-arr(arr){ // arrays or mats
     if is-arr(arr.at(0)) and arr.at(0).len() > 1 { 
@@ -68,6 +68,7 @@
 }
 
 /// Check if all values are true / 1 
+/// -> bool
 #let all(v) ={
   if is-arr(v){
     v.flatten().all(a => a == true or a ==1)
@@ -120,6 +121,7 @@
 }
 
 /// Returns true if any value in a array / matrix is true or 1
+/// -> bool
 #let any(v) ={
   // check if any item is true after iterating everything
   if is-arr(v){
@@ -130,6 +132,8 @@
   }
 }
 
+/// Check if all values are equal
+/// -> bool
 #let all-eq(u,v) = all(eq(u,v))
 
 /// Applies  function to an array
