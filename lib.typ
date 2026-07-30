@@ -361,16 +361,12 @@
 /// 
 /// -> content
 #let _repr(expr) = {
-  let repr(a) = apply(a, std.repr)
-
   if is-mat(expr) {
-    math.mat(..expr.map(repr))
+    $mat(..expr)$
   } else if is-arr(expr) {
-    math.vec(..expr.map(repr))
-  } else if type(expr) == bool {
-    repr(expr)
+    $mat(..col(..expr))$
   } else {
-    expr
+    $expr$
   }
 }
 
