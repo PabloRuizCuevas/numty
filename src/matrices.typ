@@ -183,3 +183,34 @@
 
   return retmat
 }
+
+#let cross-3(a, b) = det((eye(3), a, b))
+
+#let _cross-7-triples = range(7).map(i => (i, calc.rem(i + 1, 7), calc.rem(i + 3, 7)))
+
+#let cross-7(a, b) = {
+  let result = (0,) * 7
+
+  for (i, j, k) in _cross-7-triples {
+    result.at(i) += a.at(j) * b.at(k) - a.at(k) * b.at(j)
+    result.at(j) += a.at(k) * b.at(i) - a.at(i) * b.at(k)
+    result.at(k) += a.at(i) * b.at(j) - a.at(j) * b.at(i)
+  }
+
+  result
+}
+
+/// Cross product of two 3D or 7D vectors.
+///
+/// ```example
+/// #nt.cross((1, 2, 3), (4, 5, 6))
+/// ```
+///
+/// -> array
+#let cross(a, b) = if shape(a) == (3,) and shape(b) == (3,) {
+  cross-3(a, b)
+} else if shape(a) == (7,) and shape(b) == (7,) {
+  cross-7(a, b)
+} else {
+  panic("cross product is only defined for 3D or 7D vectors")
+}
