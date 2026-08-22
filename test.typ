@@ -15,7 +15,7 @@
     // unfortunatelly f is not aware of his own name, 
     // and eval scope is out of nt, not sure how to include it
     assert(f(..args) == assertion)
-    [#name ( #nt.p(..args, "= ", assertion) ]
+    nt.p(name, $($, ..args, $)$, $=$, assertion)
 }
 
 = Automatic Tests
@@ -35,7 +35,7 @@ $ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
   #let v = (3,2,1)
   
   // matrix 
-  #nt.p("N M = ",N, M , nt.matmul(N,M)) 
+  #nt.p($N M = $,N, M , nt.matmul(N,M))
 
   #nt.p((N,M,M).reduce(nt.matmul))
   
@@ -43,25 +43,25 @@ $ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
   #let S = ((1,2, 4), (3,4, 5) )
   #let K = ((1,2), (3,4), (4,2) )
   
-  #nt.p("S K = ", S, K , nt.matmul(S, K) )
-  #nt.p("K S = ", K, S , nt.matmul(K, S) )
+  #nt.p($S K = $, S, K , nt.matmul(S, K) )
+  #nt.p($K S = $, K, S , nt.matmul(K, S) )
   
   // matrix
-  #nt.p("u_c v_r = ",  c(..v), r(..u), " = ", nt.matmul(c(..v), r(..u))) 
+  #nt.p($u_c v_r = $,  c(..v), r(..u), $ = $, nt.matmul(c(..v), r(..u)))
   
   Big print:
   
-  #nt.print("N M = ", N, M , nt.matmul(N,M)) 
+  #nt.print($N M = $, N, M , nt.matmul(N,M))
 
 === Logic
   === eq(u,v)
     Checks element wise equality:
     
     // mat mat
-    eq(#nt.p(M,N, " = ", nt.eq(M,N))
+    #nt.p("eq", $($, M, N, $)$, $=$, nt.eq(M, N))
     
     // arr arr 
-    eq#nt.p(u,v)  #nt.eq(u,v) //
+    #nt.p("eq", $($, u, v, $)$, $=$, nt.eq(u, v))
     
     #assert(nt.eq(u,v) == (false, true, false))
     #assert(nt.eq(u,u) == (true, true, true))
@@ -82,7 +82,7 @@ $ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
     Check if array only contains true or 1 
     
     //mat
-    all#nt.p(((true, true),(true,true))) = #nt.all(((true, true),(true,true)))
+    #nt.p("all", $($, ((true, true), (true, true)), $)$, $=$, nt.all(((true, true), (true, true))))
     
     // arr
     #assert(nt.all((false, true, false)) == false)
@@ -108,7 +108,7 @@ $ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
     Checks if any element is true or 1
     // arr
     
-    nt.any(#(false, true, false)) -> #true
+    #nt.p("any", $($, (false, true, false), $)$, $=$, nt.any((false, true, false)))
     #assert(nt.any((false, true, false)) == true)
     #assert(nt.any((false, false, false)) == false)
     #assert(nt.any((0, 0, 1)) == true)
@@ -299,16 +299,16 @@ $ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
     }
   }
 
-  #test-inverse("M", M, target: nt.identity(2))
-  #test-inverse("N", N, target: nt.identity(2))
+  #test-inverse($M$, M, target: nt.identity(2))
+  #test-inverse($N$, N, target: nt.identity(2))
 
   bigger matrix:
 
-  #test-inverse("L", ((1, 4, 2), (2, 8, 6), (6, 4, 1)), target: nt.identity(3))
+  #test-inverse($L$, ((1, 4, 2), (2, 8, 6), (6, 4, 1)), target: nt.identity(3))
 
   inverse of a Matrix $K$ where $det(K) = 0$ is undefined behavior:
 
-  #test-inverse("K", ((0, 2, 2), (2, 2, 2), (2, 2, 2)))
+  #test-inverse($K$, ((0, 2, 2), (2, 2, 2), (2, 2, 2)))
 
   == identity
 
@@ -319,7 +319,7 @@ $ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
   == det
 
   #let test-det(M, value) = {
-    [#nt.p("det", M) = #nt.det(M)]
+    [#nt.p($det$, M) = #nt.det(M)]
     assert(nt.det(M) == value)
   }
 

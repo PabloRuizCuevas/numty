@@ -44,6 +44,8 @@
   v.pos().map(r => (r,),) 
 }
 
+#let col = c
+
 /// Transposes matrx and vectors
 #let transpose(m) = {
     // Get dimensions of the matrix
@@ -356,46 +358,31 @@
   range(0, num).map(v => start * calc.pow(step,v))
 }
 
-#let to-str(a) = {
-  if (type(a) == bool){
-    if(a){
-      "value1"
-    } 
-    else {
-      "value2"
-    } 
-  } 
-  else{
-    str(a)
+/// Internal function for printing mathematical expressions.
+/// Formerly called `_p`.
+/// 
+/// -> content
+#let _repr(expr) = {
+  if is-mat(expr) {
+    $mat(..expr)$
+  } else if is-arr(expr) {
+    $mat(..col(..expr))$
+  } else {
+    $expr$
   }
 }
 
+/// Prints mathematical expresions.
+/// Experimental API, subject to change without notice.
+///
+/// -> content
+#let print(..m, block: true) = math.equation(
+  m.pos().map(_repr).join(),
+  block: block,
+)
 
-#let _p(m) = {
-  if is-mat(m) {
-   "mat(" + m.map(v => v.map(j=>to-str(j)).join(",")).join(";")+ ")"
-  }
-  else if is-arr(m){
-    "vec(" + m.map(v => str(v)).join(",")+ ")"
-  }
-  else if is-arr(m){
-    is-str(m)
-  }
-  else{
-   str(m)
-  }
-}
-
-// print mathematical expresions
-#let print(..m) = {
-  let scope = (value1: "true", value2: "false")
-  eval("$ " + m.pos().map(r => _p(r)).join(" ") + " $", scope: scope)
-}
-
-// alis of print
-#let p(..m) = {
-  let scope = (value1: "true", value2: "false")
-  eval("$" + m.pos().map(r => _p(r)).join(" ") + "$", scope: scope)
-}
-
-
+/// Inline alias of print.
+/// Experimental API, subject to change without notice.
+///
+/// -> content
+#let p = print.with(block: false)
