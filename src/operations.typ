@@ -53,7 +53,7 @@
 #let trunc(value) = op(value, calc.trunc)
 #let fract(value) = op(value, calc.fract)
 #let round(a, digits: 0) = op(a, calc.round.with(digits: digits))
-#let clamp(value, min, max) = op(value, min, max, calc.clamp)
+#let clamp(value, min, max) = op(value, v => calc.clamp(v, min, max))
 
 #let min(..args) = op(..args, calc.min)
 #let max(..args) = op(..args, calc.max)
