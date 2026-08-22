@@ -107,7 +107,7 @@
 }
 
 #let op(..args, func) = {
-  if args.len() == 1 {
+  if args.pos().len() == 1 {
     _apply(..args, func)
   } else {
     args.pos().reduce((acc, x) => _broadcast(acc, x, func))
