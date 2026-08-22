@@ -184,7 +184,16 @@
   return retmat
 }
 
-#let cross-3(a, b) = det((eye(3), a, b))
+#let cross-3(a, b) = {
+  let (ax, ay, az) = a
+  let (bx, by, bz) = b
+
+  return (
+    ay * bz - az * by,
+    az * bx - ax * bz,
+    ax * by - ay * bx,
+  )
+}
 
 #let _cross-7-triples = range(7).map(i => (i, calc.rem(i + 1, 7), calc.rem(i + 3, 7)))
 
