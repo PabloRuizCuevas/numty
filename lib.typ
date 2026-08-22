@@ -44,6 +44,8 @@
   v.pos().map(r => (r,),) 
 }
 
+#let col = c
+
 /// Transposes matrx and vectors
 #let transpose(m) = {
     // Get dimensions of the matrix
