@@ -16,11 +16,7 @@
 #let exp(value) = op(value, calc.exp)
 #let sqrt(value) = op(value, if value >= 0 { calc.sqrt(value) } else { float.nan })
 
-#let root(radicant, index, odd) = op(
-  radicant,
-  index,
-  (r, i) => if r >= 0 or odd(i) { calc.root(r, i) } else { float.nan }
-)
+// `root` requires `odd`
 
 #let sin(angle) = op(angle, calc.sin)
 #let cos(angle) = op(angle, calc.cos)
@@ -68,7 +64,11 @@
 
 // redefinition under requirements
 
-#let root(radicant, index) = root(radicant, index, odd)
+#let root(radicant, index) = op(
+  radicant,
+  index,
+  (r, i) => if r >= 0 or odd(i) { calc.root(r, i) } else { float.nan }
+)
 
 // == convenience functions ==
 
