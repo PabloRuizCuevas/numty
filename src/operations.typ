@@ -14,7 +14,7 @@
   calc.pow,
 )
 #let exp(value) = op(value, calc.exp)
-#let sqrt(value) = op(value, if value >= 0 { calc.sqrt(value) } else { float.nan })
+#let sqrt(value) = op(value, value => if value >= 0 { calc.sqrt(value) } else { float.nan })
 
 // `root` requires `odd`
 
