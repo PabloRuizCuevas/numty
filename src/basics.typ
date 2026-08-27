@@ -15,7 +15,7 @@
 /// ```
 ///
 /// -> array
-#let shape(a) = if is-arr(a) { (a.len(),) + shape(a.at(0)) } else { () }
+#let shape(a) = { if is-arr(a) { (a.len(),) + if a.len() > 0 { shape(a.at(0)) } } else { () } }
 
 #let dim = shape
 
