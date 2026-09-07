@@ -1,5 +1,4 @@
-#import "lib.typ" as nt
-#import "lib.typ": r,c
+#import "src/exports.typ" as nt: r,c
 
 
 #let M = ((1,3), (3,4))
@@ -127,21 +126,6 @@ $ M = #M \ N =#N \ u = #u \ v = #v \ a = #a \ b = #b $
     #assert(nt.abs(((1,-1),(1,-4))) == ((1,1),(1,4)))
 
 == Types
-  //arrarr(a,b)
-  === arrarr(u,v)
-    Check if a,b are arrays
-    
-    #assert(nt.arrarr(u,v) == true)
-    #assert(nt.arrarr(a,b) == false)
-
-  === arrflt(u,a)
-  
-    check if u is array and a is float
-    #assert(nt.arrflt(u,b) == true) 
-    #assert(nt.arrflt(b,u) == false) 
-    #assert(nt.fltarr(b,u) == true) 
-    #assert(nt.fltarr(b,b) == false) 
-    #assert(nt.fltflt(b,b) == true) 
 
   === is-1d
     Checks if u is normal array or 1d mat 
