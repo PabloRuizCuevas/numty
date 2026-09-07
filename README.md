@@ -5,7 +5,7 @@
 A library for performing mathematical operations on n-dimensional matrices, vectors/arrays, and numbers in Typst, with support for broadcasting and handling NaN values. Numty’s broadcasting rules and API are inspired by NumPy.
 
 ```typ
-#import "numty.typ" as nt
+#import "@preview/numty:0.2.0" as nt
 
 // Define vectors and matrices
 #let a = (1, 2, 3)
@@ -23,7 +23,7 @@ A library for performing mathematical operations on n-dimensional matrices, vect
 
 // Handling NaN cases in mathematical functions
 #calc.sin((3, 4)) // Fails, as Typst does not support vector operations directly
-#nt.sin((3.4))    // Sine of each element in vector: (0.14411, 0.90929)
+#nt.sin((3, 4))   // Sine of each element in vector: (0.14112, -0.75680)
 
 // Generate equally spaced values and vectorized functions
 #let x = nt.linspace(0, 10, 3)  // Generate 3 equally spaced values between 0 and 10: (0, 5, 10)
@@ -43,10 +43,10 @@ A library for performing mathematical operations on n-dimensional matrices, vect
 // matrix
 #nt.transpose(m)  // transposition
 #nt.matmul(m,m) //  matrix multipliation
-#nt.matmul(c(1,2), r(2,3)) //  colum vector times row vector multiplication.
+#nt.matmul(nt.c(1,2), nt.r(2,3)) //  column vector times row vector multiplication.
 #nt.inverse(m) // inverse of a matrix
-#np.trace(m) // trace
-#np.det(m) // nxn determinant 
+#nt.trace(m) // trace
+#nt.det(m) // nxn determinant 
  
 // printing
 #nt.print(m, " != " , (1,2))  // long dollar print, see in pdf 
@@ -64,8 +64,8 @@ For matrix specific operations we use 2d arrays / nested arrays, that are also t
 For convenience you can create column or row vectors with the #nt.c and #nt.r functions.
 
 ```typ
-#import "numty.typ" as nt
-#import "numty.typ": c, r
+#import "@preview/numty:0.2.0" as nt
+#import "@preview/numty:0.2.0": c, r
 
 #let a = (1,2,3)
 #let b = (3,2,1)
@@ -107,8 +107,8 @@ All operators are element-wise,
 Basic vector operations
 
 ```typ
-#nt.dot((1,2),(2,4))  //  9
-#nt.normalize((1,4), l:1) // (1/5,4/5)
+#nt.dot((1,2),(2,4))  //  10
+#nt.normalize((1,4), p:1) // (1/5,4/5)
 ```
 
 ### Others:
@@ -125,7 +125,7 @@ Functions for creating equally spaced indexes in linear and logspace, usefull fo
 
 ```typ
 #nt.matmul(m,m)               // matrix multiplication
-#nt.inverse((1,3), (3,4))     // inverse of a matrix
+#nt.inverse(((1,3), (3,4)))   // inverse of a matrix
 #nt.det(((1,3), (3,4)))       // nxn matrix determinant
 #nt.trace(((1,3), (3,4)))     // trace of square matrix
 #nt.transpose(((1,3), (3,4))) // matrix transposition
@@ -136,6 +136,6 @@ Functions for creating equally spaced indexes in linear and logspace, usefull fo
 Numty supports $ printing to the pdf of numerical matrices, both long and short format. 
 
 ```typ
-#nt.print((1,2),(4,2)))  // to display in the pdf
-#nt.p((1,2),(4,2)), " random string ")     // to display in the pdf
+#nt.print((1,2),(4,2))  // to display in the pdf
+#nt.p((1,2),(4,2), " random string ")     // to display in the pdf
 ```

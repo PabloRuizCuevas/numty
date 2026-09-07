@@ -1,0 +1,27 @@
+name: Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: typst-community/setup-typst@v5
+        with:
+          typst-version: ^0.15.0
+
+      - name: Compile test suite
+        run: typst compile test.typ test.pdf
+
+      - name: Upload rendered test.pdf
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-pdf
+          path: test.pdf
+          if-no-files-found: ignore
